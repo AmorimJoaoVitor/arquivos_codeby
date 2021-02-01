@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busque aqui</title>
+</head>
+
+<body>
+    <input type="text" id="input_search"><button onclick="storingWord()">Buscar</button>
+    <div id="div_response">
+        <h3 id="product_name"></h3>
+
+    </div>
+</body>
+<img src="">
+
+</html>
+
+<script>
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+    // fetch("https://cors-anywhere.herokuapp.com/https://www.kallan.com.br/api/catalog_system/pub/products/search/?fq=", requestOptions)
+    // .then(response => response.json())
+    // .then(result => console.log(result))
+    // .catch(error => console.log('error', error));
+    // console.log('requestOptions');
+
+    // const myList = document.querySelector('ul');
+    // const myRequest = new Request('products.json');
+    // fetch(myRequest)
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     for (const product of data.products) {
+    //       let listItem = document.createElement('li');
+    //       listItem.appendChild(
+    //         document.createElement('strong')
+    //       ).textContent = product.Name;
+    //       listItem.append(
+    //         ` can be found in ${
+    //           product.Location
+    //         }. Cost: `
+    //       );
+    //       listItem.appendChild(
+    //         document.createElement('strong')
+    //       ).textContent = `£${product.Price}`;
+    //       myList.appendChild(listItem);
+    //     }
+    //   })
+    //   .catch(console.error);
+
+
+
+    function storingWord() {
+        div_response.innerHTML = "";
+        var searchWord = document.getElementById('input_search').value;
+        fetch("https://cors-anywhere.herokuapp.com/https://www.kallan.com.br/api/catalog_system/pub/products/search/?ft=" + searchWord, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                // var nameProduct = result.productName;
+                console.log(result);
+
+                result.forEach(element => {
+                    var nameProduct = element.productName;
+                    var url_image = element.items[0].images[0].imageUrl;
+                    var totalPrice = element.items[0].sellers[0].commertialOffer.PriceWithoutDiscount;
+                    var priceWithDiscount = element.items[0].sellers[0].commertialOffer.Price;
+                    var plots = element.items[0].sellers[0].commertialOffer.Installments[0];
+                    console.log(plots);
+
+                    let discount = ((totalPrice - priceWithDiscount) / totalPrice * 100);
+                    if (totalPrice == 0 || priceWithDiscount == 0) {
+                        discount = 0;
+                    }
+                    div_response.innerHTML += `<b>${discount}% OFF</b><img src="${url_image}" width="300"><ul><li><h3>${nameProduct}</h3></li> <li>Preço total ${totalPrice}</li> <li> Preço com desconto ${priceWithDiscount}
+                        </li></ul>`
+
+
+                });
+            })
+            .catch(error => console.log('error', error));
+        console.log('requestOptions');
+eae()
+    }
+
+function eae(){
+    alert('teste')
+}
+</script>
