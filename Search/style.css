@@ -1,0 +1,149 @@
+* {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+}
+
+.sec_catalog {
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    margin: 40px 0;
+}
+
+.catalog {
+    height: 1960px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.response_box_css {
+    display: flex;
+    width: 65%;
+    flex-wrap: wrap;
+    /* height: 100%; */
+    /* align-items: center; */
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.img_product {
+    opacity: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: .5s ease;
+    backface-visibility: hidden;
+}
+
+.all:hover .img_product {
+    opacity: 0.3;
+}
+
+.btn_buy {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.all:hover .btn_buy {
+    opacity: 1;
+}
+
+.div_img {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.span_price {
+    text-align: left;
+    font-size: 13px;
+}
+
+#price {
+    color: red;
+    text-decoration: line-through;
+}
+
+.all {
+    display: flex;
+    width: 29%;
+    flex-direction: column;
+    /* border: red solid 2px; */
+    height: 395px;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 15px;
+    box-shadow: 0px 4px 7px 4px lightgrey;
+    border-radius: 20px;
+    padding: 10px;
+    position: relative;
+}
+
+.discount_off {
+    background-color: rgb(148, 64, 197);
+    width: 43px;
+    height: 18px;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 25px;
+    left: 211px;
+}
+
+.title_product {
+    color: #808097;
+    margin-bottom: 15px;
+}
+
+.div_prices {
+    /* height: 46px; */
+    width: 100%;
+}
+
+body input {
+    padding: 12px 15px;
+    border-radius: 9px;
+    width: 30%;
+    border: none;
+    outline: none;
+    box-shadow: 0px 4px 5px 6px lightgrey;
+    margin-right: 5px;
+}
+
+body button {
+    padding: 15px 10px;
+    border-radius: 10px;
+    width: 90px;
+    margin-left: 5px;
+    outline: none;
+    border: none;
+    background-color: rgb(148, 64, 197);
+    color: #ffffff;
+    box-shadow: 0px 4px 5px 4px lightgrey;
+    cursor: pointer;
+}
+
+body button:active,
+body button:hover {
+    transition: 0.5s;
+    background-color: #ffffff;
+    color: rgb(148, 64, 197);
+}
