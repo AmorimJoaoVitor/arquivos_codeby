@@ -60,7 +60,7 @@
         fetch("https://cors-anywhere.herokuapp.com/https://www.kallan.com.br/api/catalog_system/pub/products/search/?ft=" + searchWord, requestOptions)
             .then(response => response.json())
             .then(result => {
-                // var nameProduct = result.productName;
+                
                 console.log(result);
 
                 result.forEach(element => {
@@ -68,25 +68,30 @@
                     var url_image = element.items[0].images[0].imageUrl;
                     var totalPrice = element.items[0].sellers[0].commertialOffer.PriceWithoutDiscount;
                     var priceWithDiscount = element.items[0].sellers[0].commertialOffer.Price;
-                    var plots = element.items[0].sellers[0].commertialOffer.Installments[0];
+                    var plots = element.items[0].sellers[0].commertialOffer.Installments;
+                    var maior = 0;
+
                     console.log(plots);
+                    for (let i = 0; i < result.length; i++) {
+                        if(result[i] > maior){
+                            maior = result[i];
+                        }
+                       // var elemento = result[i];
+                        
+                    }
+                  console.log(maior);
 
                     let discount = ((totalPrice - priceWithDiscount) / totalPrice * 100);
                     if (totalPrice == 0 || priceWithDiscount == 0) {
                         discount = 0;
                     }
-                    div_response.innerHTML += `<b>${discount}% OFF</b><img src="${url_image}" width="300"><ul><li><h3>${nameProduct}</h3></li> <li>Preço total ${totalPrice}</li> <li> Preço com desconto ${priceWithDiscount}
+                    div_response.innerHTML += `<b>${discount}% OFF</b><img src="${url_image}" width="300"><ul><li><h3>${nameProduct}</h3></li> <li>Preço total R$${totalPrice}</li> <li> Preço com desconto R$${priceWithDiscount}
                         </li></ul>`
-
 
                 });
             })
             .catch(error => console.log('error', error));
         console.log('requestOptions');
-eae()
-    }
 
-function eae(){
-    alert('teste')
-}
+    }
 </script>
