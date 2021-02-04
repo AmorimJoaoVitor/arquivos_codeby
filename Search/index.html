@@ -7,39 +7,84 @@
     <link rel="stylesheet" href="style.css">
     <title>Busque aqui</title>
 </head>
+
 <body>
     <section class="catalog">
         <div class="sec_catalog">
             <input placeholder="O que você está buscando?" type="text" id="input_search">
             <button onclick="storingWord()">Buscar</button>
             <label class="lbl_price">Faixa de preço</label>
-            <input placeholder="Preço mínimo" class="input_filter" type="number" id="in_min_value">
-            <input placeholder="Preço máximo" class="input_filter" type="number" id="in_max_value">
+            <div>
+                <input  type="checkbox" value="&&fq=P:[ 0 TO 50 ]" id="value_0_to_50"><p>Até R$ 50</p>
+            </div>
+            <div>
+                <input  type="checkbox" value="&&fq=P:[ 151 TO 200 ]" id="value_151_to_200"><p>R$ 151 a R$ 200</p>
+            </div>
+            <div>
+                <input  type="checkbox" value="&&fq=P:[ 251 TO 300 ]" id="value_251_to_300"><p>R$ 251 a R$ 300</p>
+            </div>
+            <div>
+                <input  type="checkbox" value="&&fq=P:[ 301 TO 350 ]" id="value_301_to_350"><p>R$ 301 a R$ 350</p>
+            </div>
+            <div>
+                <input  type="checkbox" value="&&fq=P:[ 351 TO 400 ]" id="value_351_to_400"><p>R$ 351 a R$ 400</p>
+            </div>
+            <div>
+                <input  type="checkbox" value="&&fq=P:[ 451 TO 500 ]" id="value_451_to_500"><p>R$ 451 a R$ 500</p>
+            </div>
+            <div>
+                <input type="text" style="display: none;" value="&&fq=P:[ 0 TO 1000 ]" id="empty_value">
+            </div>
         </div>
         <div id="response_box" class="response_box_css">
         </div>
         <span class="span_error" id="error"></span>
     </section>
 </body>
+
 </html>
 <script>
     var requestOptions = {
         method: 'GET',
         redirect: 'follow'
     };
-    
+
     function storingWord() {
-        var min = (document.getElementById('in_min_value'));
-        var max = (document.getElementById('in_max_value'));
-    
-        if (min <= 0 || max <= 0 || max == "" || min == "" ) {
-            min = 1;
-            max = Infinity;
+        var interval1 = document.getElementById("value_0_to_50");
+        var interval2 = document.getElementById("value_151_to_200");
+        var interval3 = document.getElementById("value_251_to_300");
+        var interval4 = document.getElementById("value_301_to_350");
+        var interval5 = document.getElementById("value_351_to_400");
+        var interval6 = document.getElementById("value_451_to_500");
+        var interval7 = document.getElementById("empty_value")
+         var priceInterval; //= document.getElementById("empty_value");
+
+        if (interval1.checked == true) {
+            priceInterval = interval1.value;
         }
+        else if (interval2.checked == true) {
+            priceInterval = interval2.value;
+        }
+        else if (interval3.checked == true) {
+            priceInterval = interval3.value;
+        }
+        else if (interval4.checked == true) {
+            priceInterval = interval4.value;
+        }
+        else if (interval5.checked == true) {
+            priceInterval = interval5.value;
+        }
+        else if (interval6.checked == true) {
+            priceInterval = interval6.value;
+        }
+        else {
+            priceInterval = interval7.value;
+        }
+
         error.innerHTML = "";
         response_box.innerHTML = "";
         var searchWord = document.getElementById('input_search').value;
-        fetch(`https://codeby-cors.integrationby.com.br/https://www.kallan.com.br/api/catalog_system/pub/products/search/?ft=${searchWord}&&fq=P:[${min.value} TO ${max.value}]&_from=0&_to=30`)
+        fetch(`https://codeby-cors.integrationby.com.br/https://www.kallan.com.br/api/catalog_system/pub/products/search/?ft=${searchWord}&_from=0&_to=30${priceInterval}`)
             .then(response => response.json())
             .then(result => {
                 console.log(result);
@@ -72,7 +117,7 @@
                                             </div>
                                             <h3 class="title_product" id="product_name">${nameProduct}</h3>
                                             <div class="div_prices"> 
-                                                <span id="discount_price" class="span_price">R$ ${priceWithDiscount}</span><span class="span_price">${NumberOfplots}X de ${ajuste(valueOfplots, 2)} no cartão Kallancard</span><button class="btn_buy">Comprar</button></div>
+                                                <span id="discount_price" class="span_price">R$ ${priceWithDiscount}</span><span class="span_price">${NumberOfplots}X de ${ajuste(valueOfplots, 2)}</span><button class="btn_buy">Comprar</button></div>
                                                 </div>
                                                 `;
                             } else {

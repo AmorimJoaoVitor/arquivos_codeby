@@ -30,7 +30,14 @@ body {
     flex-direction: column;
     align-items: center;
 }
-
+.sec_catalog div {
+    display: flex;
+    margin-left: 10px;
+    justify-content: space-evenly;
+}
+.sec_catalog div p {
+    margin: 0 10px;
+} 
 .response_box_css {
     display: flex;
     width: 65%;
