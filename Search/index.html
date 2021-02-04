@@ -7,85 +7,94 @@
     <link rel="stylesheet" href="style.css">
     <title>Busque aqui</title>
 </head>
-
 <body>
     <section class="catalog">
         <div class="sec_catalog">
             <input placeholder="O que você está buscando?" type="text" id="input_search">
             <button onclick="storingWord()">Buscar</button>
+            <label class="lbl_price">Faixa de preço</label>
+            <input placeholder="Preço mínimo" class="input_filter" type="number" id="in_min_value">
+            <input placeholder="Preço máximo" class="input_filter" type="number" id="in_max_value">
         </div>
         <div id="response_box" class="response_box_css">
         </div>
-
+        <span class="span_error" id="error"></span>
     </section>
 </body>
-
 </html>
-<div>
-
-
-    <script>
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-        };
-
-        function storingWord() {
-            response_box.innerHTML = "";
-            var searchWord = document.getElementById('input_search').value;
-            fetch("https://codeby-cors.integrationby.com.br/https://www.kallan.com.br/api/catalog_system/pub/products/search/?ft=" + searchWord, requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                    // var nameProduct = result.productName;
-                    console.log(result);
-
-                    result.forEach(element => {
-                        var nameProduct = element.productName;
-                        var url_image = element.items[0].images[0].imageUrl;
-                        var totalPrice = element.items[0].sellers[0].commertialOffer.PriceWithoutDiscount;
-                        var priceWithDiscount = element.items[0].sellers[0].commertialOffer.Price;
-                        var plots = element.items[0].sellers[0].commertialOffer.Installments[5];
-                        console.log(plots);
-
-                        let discount = ((totalPrice - priceWithDiscount) / totalPrice * 100);
+<script>
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+    
+    function storingWord() {
+        var min = (document.getElementById('in_min_value'));
+        var max = (document.getElementById('in_max_value'));
+    
+        if (min <= 0 || max <= 0 || max == "" || min == "" ) {
+            min = 1;
+            max = Infinity;
+        }
+        error.innerHTML = "";
+        response_box.innerHTML = "";
+        var searchWord = document.getElementById('input_search').value;
+        fetch(`https://codeby-cors.integrationby.com.br/https://www.kallan.com.br/api/catalog_system/pub/products/search/?ft=${searchWord}&&fq=P:[${min.value} TO ${max.value}]&_from=0&_to=30`)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+                if (result.length == 0) {
+                    error.innerHTML = `Nenhum resultado para "${searchWord}"`;
+                }
+                result.forEach(element => {
+                    var nameProduct = element.productName;
+                    var url_image = element.items[0].images[0].imageUrl;
+                    var totalPrice = element.items[0].sellers[0].commertialOffer.PriceWithoutDiscount;
+                    var priceWithDiscount = element.items[0].sellers[0].commertialOffer.Price;
+                    var isAvaliable = element.items[0].sellers[0].commertialOffer.AvailableQuantity;
+                    let discount = ((totalPrice - priceWithDiscount) / totalPrice * 100);
+                    if (isAvaliable != 0) {
                         if (totalPrice == 0 || priceWithDiscount == 0) {
                             discount = 0;
                         }
-
-                        if (priceWithDiscount == 0) {
-                            priceWithDiscount = "Produto esgotado!"
-                        } else {
-
-
+                        else {
+                            function ajuste(nr, casas) {
+                                const og = Math.pow(10, 2)
+                                return Math.floor(nr * og) / og;
+                            }
                             if (totalPrice == priceWithDiscount) {
+                                var NumberOfplots = element.items[0].sellers[0].commertialOffer.Installments.reverse()[0].NumberOfInstallments;
 
+                                var valueOfplots = totalPrice / NumberOfplots;
                                 response_box.innerHTML += `<div class="all">
-                                    <div class="div_img">
-                                        <img id="product_image" class="img_product" src="${url_image}">
-                                        </div>
-                                        <h3 class="title_product" id="product_name">${nameProduct}</h3>
-                                        <div class="div_prices"> 
-                                            <span id="discount_price" class="span_price">R$ ${priceWithDiscount}</span><span class="span_price">${plots}</span><button class="btn_buy">Comprar</button></div>
+                                        <div class="div_img">
+                                            <img id="product_image" class="img_product" src="${url_image}">
                                             </div>
-                                            `;
-                            } else {
-
-                                response_box.innerHTML += `<div class="all"><div class="discount_off">${discount}% OFF</div>
-                                            <div class="div_img">
-                                                <img id="product_image" class="img_product" src="${url_image}">
+                                            <h3 class="title_product" id="product_name">${nameProduct}</h3>
+                                            <div class="div_prices"> 
+                                                <span id="discount_price" class="span_price">R$ ${priceWithDiscount}</span><span class="span_price">${NumberOfplots}X de ${ajuste(valueOfplots, 2)} no cartão Kallancard</span><button class="btn_buy">Comprar</button></div>
                                                 </div>
-                                                <h3 class="title_product" id="product_name">${nameProduct}</h3>
-                                                <div class="div_prices">
-                                                    span id="price" class="span_price">R$ ${totalPrice}</span>
-                                                    <span id="discount_price" class="span_price">R$ ${priceWithDiscount}</span></div>
+                                                `;
+                            } else {
+                                var NumberOfplots = element.items[0].sellers[0].commertialOffer.Installments.reverse()[0].NumberOfInstallments;
+
+                                var valueOfplots = totalPrice / NumberOfplots;
+                                response_box.innerHTML += `<div class="all"><div class="discount_off">${discount}% OFF</div>
+                                                <div class="div_img">
+                                                    <img id="product_image" class="img_product" src="${url_image}">
                                                     </div>
-                                                    `;
+                                                    <h3 class="title_product" id="product_name">${nameProduct}</h3>
+                                                    <div class="div_prices">
+                                                        span id="price" class="span_price">R$ ${totalPrice}</span>
+                                                        <span id="discount_price" class="span_price">R$ ${priceWithDiscount}</span></div>
+                                                        </div>
+                                                        `;
                             }
                         }
-                    });
-                })
-                .catch(error => console.log('error', error));
-            console.log('requestOptions');
-        }
-    </script>
-    <!-- <span id="price" class="span_price">R$ ${totalPrice}</span> -->
+                    }
+                });
+            })
+            .catch(error => console.log('error', error));
+        console.log('requestOptions');
+    }
+</script>
